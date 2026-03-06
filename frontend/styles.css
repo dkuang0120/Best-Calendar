@@ -23,11 +23,32 @@ h1 {
     background-color: white;
     margin: 0 auto;
 
-    /* grid for 7 columns x 5 rows */
+    /* grid for 7 columns x 5 rows, plus header row */
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: auto repeat(5, 1fr);
     gap: 1px;
+}
+
+.calendar-header {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+    background-color: #f7f7f7;
+    font-weight: bold;
+}
+
+.calendar-header .arrow {
+    cursor: pointer;
+    padding: 0 10px;
+    user-select: none;
+}
+
+.calendar-header .month-name {
+    flex: 1;
+    text-align: center;
 }
 
 .day {
