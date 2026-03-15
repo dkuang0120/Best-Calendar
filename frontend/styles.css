@@ -1,61 +1,149 @@
-body {
-    font-family: Arial, sans-serif;
+:root {
+    --primary-clr: #b38add;
+}
+
+* {
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
 }
 
-#app {
-    text-align: center;
-    padding-top: 50px; 
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e2e1dc;
 }
 
-h1 {
-    width: 600px;
-    margin: 0 auto 20px;
-    text-align: center;
-}
-
-.calendar-outline {
-    width: 600px;
-    height: 600px;
-    border: 2px solid #333;
-    background-color: white;
+.container {
+    position: relative;
+    width: 1200px;
+    min-height: 850px;
     margin: 0 auto;
-
-    /* grid for 7 columns x 5 rows, plus header row */
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: auto repeat(5, 1fr);
-    gap: 1px;
-}
-
-.calendar-header {
-    grid-column: 1 / -1;
+    padding: 5px;
+    color: #fff;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px 0;
-    background-color: #f7f7f7;
-    font-weight: bold;
+    border-radius: 10px;
+    background-color: #373c4f;
 }
 
-.calendar-header .arrow {
+.left {
+    width: 60%;
+    padding: 20px;
+}
+
+.calendar {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: #878895;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.calendar::before,
+.calendar::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: 12px;
+    height: 97%;
+    border-radius: 0 5px 0;
+    background-color: #d3d5d6d7;
+    transform: translateY(-50%);
+}
+
+.calendar::before {
+    height: 94%;
+    left: calc(100% + 12px);
+    background-color: rgb(153,153,153);
+}
+
+/* Fix 1: .calendar.month -> .calendar .month (missing descendant space) */
+.calendar .month {
+    width: 100%;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/* Fix 2: same selector fix for hover states */
+.calendar .month .prev:hover,
+.calendar .month .next:hover {
     cursor: pointer;
-    padding: 0 10px;
-    user-select: none;
+    color: var(--primary-clr);
 }
 
-.calendar-header .month-name {
-    flex: 1;
-    text-align: center;
+.calendar .weekdays {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: capitalize;
 }
 
-.day {
-    border: 1px solid #ccc;
+.calendar .weekdays div {
+    width: 14.2%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    color: #333;
+}
+
+.calendar .days {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.calendar .days .day {
+    width: 14.28%;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--primary-clr);
+    border: 1px solid #f5f5f5;
+}
+
+.calendar .day:not(.prev-date):not(.next-date):hover {
+    color: #fff;
+    background-color: var(--primary-clr);
+}
+
+.calendar .days .prev-date,
+.calendar .days .next-date {
+    color: #b3b3b3;
+}
+
+/* Fix 3: empty ::before removed; today/active now have actual visible styles */
+.calendar .days .today {
+    color: #fff;
+    background-color: var(--primary-clr);
+}
+
+.calendar .days .active {
+    border: 2px solid var(--primary-clr);
 }
