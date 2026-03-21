@@ -165,4 +165,70 @@ body {
     border: none;
     color: white;
     cursor: pointer;
+    border-radius: 4px;
+}
+
+#selected-date-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #b38add;
+    margin-bottom: 8px;
+    font-style: italic;
+}
+
+/* Event list items */
+
+.no-events {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.07);
+    border-left: 3px solid var(--primary-clr);
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+}
+
+.event-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.event-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.event-time-tag {
+    font-size: 0.78rem;
+    color: #b38add;
+}
+
+.delete-event-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #ff7f7f;
+    font-size: 1.1rem;
+    line-height: 1;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.delete-event-btn:hover {
+    background: rgba(255,80,80,0.2);
 }
