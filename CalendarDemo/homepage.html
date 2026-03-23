@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<title>Calendar</title>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar-left">
+    <div class="calendar small-calendar">
+      <div class="month">
+        <i class="fa fa-angle-left prev"></i>
+        <div class="date"></div>
+        <i class="fa fa-angle-right next"></i>
+      </div>
+
+      <div class="weekdays">
+        <div>S</div><div>M</div><div>T</div>
+        <div>W</div><div>T</div><div>F</div><div>S</div>
+      </div>
+
+      <div class="days"></div>
+    </div>
+  </div>
+
+  <!-- CENTER (WEEK VIEW) -->
+  <div class="main-view">
+    <div class="week-toolbar">
+      <h2 class="week-title">This Week</h2>
+    </div>
+
+    <div class="week-view">
+      <div class="time-column" id="time-column"></div>
+
+      <div class="week-schedule">
+        <div class="week-header" id="week-header"></div>
+
+        <div class="week-body-wrapper">
+          <div class="week-body" id="week-body">
+            <div class="current-time-line" id="current-time-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="sidebar-right">
+
+    <div class="todo-box">
+      <h3>To-Do List</h3>
+      <div id="taskList"></div>
+      <div class="todo-input-row">
+        <input id="taskInput" placeholder="Add task">
+      </div>
+    </div>
+
+    <div class="chat-box">
+      <div class="assistant-header-row">
+        <h3>Assistant</h3>
+        <button id="load-mock-syllabus" class="assistant-demo-btn" type="button">
+          Load Mock Syllabus
+        </button>
+      </div>
+      <div class="assistant-help-text">
+        Paste syllabus text below or use the mock demo button, then click Send.
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="chat-input-bar">
+  <textarea id="chat-input" rows="3" placeholder="Paste syllabus text here for the assistant demo..."></textarea>
+  <button id="send-chat" type="button">↑</button>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

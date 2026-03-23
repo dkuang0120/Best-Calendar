@@ -1,0 +1,435 @@
+:root {
+    --primary-clr: #b38add;
+    --primary-clr-hover: #c49ae9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e2e1dc;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 250px 1fr 320px;
+    gap: 15px;
+    padding: 15px;
+    background-color: #373c4f;
+}
+
+/* LEFT SIDEBAR */
+
+.sidebar-left {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.calendar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: #878895;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.calendar .month {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.calendar .month .prev:hover,
+.calendar .month .next:hover {
+    cursor: pointer;
+    color: var(--primary-clr);
+}
+
+.calendar .weekdays {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-weight: 500;
+}
+
+.calendar .weekdays div {
+    width: 14.2%;
+    display: flex;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.calendar .days {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 12px 12px 12px;
+}
+
+.calendar .days div {
+    width: 14.28%;
+    height: 50px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #f5f5f5;
+    cursor: pointer;
+}
+
+.calendar .days div:hover {
+    background-color: var(--primary-clr-hover);
+    color: white;
+}
+
+.prev-date,
+.next-date {
+    color: #b3b3b3;
+}
+
+.today {
+    background-color: transparent;
+    border: 2px solid var(--primary-clr) !important;
+    color: var(--primary-clr) !important;
+}
+
+.active {
+    background-color: var(--primary-clr);
+    color: white !important;
+    border: 2px solid var(--primary-clr) !important;
+}
+
+/* CENTER */
+
+.main-view {
+    background: white;
+    border-radius: 18px;
+    padding: 18px 18px 98px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.week-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+}
+
+.week-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2f3443;
+}
+
+.week-view {
+    display: flex;
+    gap: 0;
+    height: 100%;
+    min-height: 0;
+    border: 1px solid #ececf3;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.time-column {
+    width: 72px;
+    flex-shrink: 0;
+    border-right: 1px solid #ececf3;
+    background: #fafafe;
+    padding-top: 56px;
+    position: relative;
+    overflow: hidden;
+}
+
+.time-column-track {
+    will-change: transform;
+}
+
+.time-slot-label {
+    height: 64px;
+    font-size: 0.72rem;
+    color: #8d92a3;
+    text-align: right;
+    padding-right: 10px;
+    transform: translateY(-8px);
+}
+
+.week-schedule {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: #fff;
+}
+
+.week-header {
+    height: 56px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 1px solid #ececf3;
+    background: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+.week-header-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border-left: 1px solid #f3f3f8;
+    color: #666c7d;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.week-header-day:first-child {
+    border-left: none;
+}
+
+.week-header-day-name {
+    font-size: 0.78rem;
+    color: #666c7d;
+    font-weight: 500;
+}
+
+.week-header-day-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2f3443;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.week-header-day.today-column .week-header-day-num,
+.week-header-day.active .week-header-day-num {
+    background: var(--primary-clr);
+    color: white;
+}
+
+.week-body-wrapper {
+    position: relative;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fff;
+}
+
+.week-body {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    min-height: 1536px;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        #ffffff 0px,
+        #ffffff 63px,
+        #ececf3 64px
+      );
+    background-size: 100% 64px;
+    background-attachment: local;
+}
+
+.week-day-column {
+    position: relative;
+    border-left: 1px solid #f3f3f8;
+    min-height: 1536px;
+}
+
+.week-day-column:first-child {
+    border-left: none;
+}
+
+.hour-cell {
+    height: 64px;
+    border-bottom: 1px solid rgba(236, 236, 243, 0.8);
+}
+
+.current-time-line {
+    position: absolute;
+    height: 2px;
+    background: #ea4335;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.current-time-line::before {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ea4335;
+}
+
+.week-event {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    border-radius: 10px;
+    padding: 8px 28px 8px 10px;
+    background: rgba(179, 138, 221, 0.9);
+    border-left: 4px solid #8f5fd0;
+    color: white;
+    overflow: hidden;
+    z-index: 4;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.week-event-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.week-event-time {
+    font-size: 0.72rem;
+    margin-top: 4px;
+    opacity: 0.85;
+}
+
+/* RIGHT SIDEBAR */
+
+.sidebar-right {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: calc(100vh - 30px);
+    min-height: 0;
+    overflow: hidden;
+}
+
+.todo-box {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    height: 260px;
+    overflow-y: auto;
+}
+
+.todo-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#taskInput {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    padding: 6px 0;
+    font-size: 0.95rem;
+}
+
+#taskInput::placeholder {
+    color: #aaa;
+}
+
+.chat-box {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.chat-messages {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #f3f3f3;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* BOTTOM CHAT INPUT */
+
+.chat-input-bar {
+    position: fixed;
+    bottom: 0;
+    left: 250px;
+    right: 320px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 12px;
+    background: white;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input-bar input,
+.chat-input-bar textarea {
+    flex: 1;
+    min-height: 52px;
+    max-height: 140px;
+    resize: vertical;
+    padding: 12px 16px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 0.92rem;
+    line-height: 1.4;
+}
+
+.chat-input-bar button {
+    padding: 10px 15px;
+    border-radius: 50%;
+    background: var(--primary-clr);
+    color: white;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1100px) {
+    .container {
+        grid-template-columns: 220px 1fr 280px;
+    }
+
+    .chat-input-bar {
+        left: 220px;
+        right: 280px;
+    }
+}
