@@ -1,55 +1,49 @@
-const express = require('express');
-const cors = require('cors');
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { GoogleGenAI } from "@google/genai";
+
+dotenv.config();
 
 const app = express();
+const PORT = 8000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// In-memory storage (replace with database)
-let events = [];
-
-// Get all events
-app.get('/api/events', (req, res) => {
-    res.json(events);
+app.get("/", (req, res) => {
+  res.send("Server is running");
 });
 
-// Get event by ID
-app.get('/api/events/:id', (req, res) => {
-    const event = events.find(e => e.id === req.params.id);
-    if (!event) return res.status(404).json({ message: 'Event not found' });
-    res.json(event);
+app.post("/api/chat", async (req, res) => {
+  try {
+    console.log("hit /api/chat");
+    console.log("body:", req.body);
+
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+    });
+
+    const userMessage = req.body?.message;
+
+    if (!userMessage) {
+      return res.status(400).json({ error: "Missing message" });
+    }
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: userMessage,
+    });
+
+    res.json({
+      reply: response.text || "No response returned.",
+    });
+  } catch (error) {
+    console.error("Gemini error:", error);
+    res.status(500).json({ error: "Gemini request failed" });
+  }
 });
 
-// Create event
-app.post('/api/events', (req, res) => {
-    const event = {
-        id: Date.now().toString(),
-        title: req.body.title,
-        description: req.body.description,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-        date: req.body.date
-    };
-    events.push(event);
-    res.status(201).json(event);
+app.listen(PORT, () => {
+  console.log(`Server running at http://127.0.0.1:${PORT}`);
 });
-
-// Update event
-app.put('/api/events/:id', (req, res) => {
-    const event = events.find(e => e.id === req.params.id);
-    if (!event) return res.status(404).json({ message: 'Event not found' });
-    
-    Object.assign(event, req.body);
-    res.json(event);
-});
-
-// Delete event
-app.delete('/api/events/:id', (req, res) => {
-    events = events.filter(e => e.id !== req.params.id);
-    res.json({ message: 'Event deleted' });
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

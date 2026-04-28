@@ -1,3 +1,5 @@
+console.log("loaded");
+
 const months = [
   'January','February','March','April','May','June',
   'July','August','September','October','November','December'
@@ -614,3 +616,39 @@ if (document.readyState === 'loading') {
 }
 
 setInterval(updateCurrentTimeLine, 60000);
+
+// AI Integration
+const sendButton = document.getElementById("send-chat");
+const chatInput = document.getElementById("chat-input");
+const chatOutput = document.getElementById("chat-output");
+
+sendButton.addEventListener("click", sendMessage);
+
+async function sendMessage() {
+  const message = chatInput.value.trim();
+
+  if (!message) {
+    chatOutput.textContent = "Please enter a message.";
+    return;
+  }
+
+  chatOutput.textContent = "Thinking...";
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await res.json();
+    console.log("server response:", data);
+
+    chatOutput.textContent = data.reply || "No response returned.";
+  } catch (err) {
+    console.error("error:", err);
+    chatOutput.textContent = "Something went wrong.";
+  }
+}

@@ -630,3 +630,30 @@ body {
 #taskInput::placeholder {
     color: #aaa;
 }
+/* AI */
+/* .chat-message {
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-width: 90%;
+} */
+/* .chat-message.user {
+  background: #4f46e5;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+.chat-message.assistant {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+.chat-message.thinking {
+  opacity: 0.5;
+  font-style: italic;
+}
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+} */
