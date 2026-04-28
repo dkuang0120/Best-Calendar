@@ -1,48 +1,62 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
 const app = express();
-const PORT = 8000;
-
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Server is running");
-});
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+// Check if the API key is set
+if(!OPENAI_API_KEY) {console.error("OPENAI_API_KEY is not set in environment variables"); 
+  process.exit(1);
+}
 
-app.post("/api/chat", async (req, res) => {
+app.post("/chat", async (req, res) => {
+  const { messages } = req.body;
+  
   try {
-    console.log("hit /api/chat");
-    console.log("body:", req.body);
-
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
+    const response = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        input: `You are a calendar assistant.
+        You can:
+        - answer questions about events
+        - add events to the calendar
+        - delete events from the calendar
+        
+        When the user wants to add an event, respond ONLY with a raw JSON object. No markdown, not extra text.
+        You MUST always include both startTime and endTime. If the user does not specify an endTime, set it to 1 hour after the startTime.
+        
+        Add event(all fields required):
+        {
+          "action": "add",
+          "title": "Event name:"
+          date: "YYYY-MM-DD",
+          startTime: "HH:MM",
+          endTime: "HH:MM"
+        }
+        When the user wants to delete an event, respond ONLY with a raw JSON object. No markdown, no extra text. Respond ONLY with:
+        {
+        "action": "delete",
+        "title": "Event name:"
+        }
+        For all other messages, respond in plain text.
+      
+        Events:
+        ${JSON.stringify(events, null, 2)}
+        
+        User: ${message}`
+      }),
     });
 
-    const userMessage = req.body?.message;
-
-    if (!userMessage) {
-      return res.status(400).json({ error: "Missing message" });
-    }
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: userMessage,
-    });
-
-    res.json({
-      reply: response.text || "No response returned.",
-    });
-  } catch (error) {
-    console.error("Gemini error:", error);
-    res.status(500).json({ error: "Gemini request failed" });
-  }
-});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://127.0.0.1:${PORT}`);
