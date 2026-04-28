@@ -639,21 +639,55 @@ function appendChatBubble(role,text){
     return null;
 const bubble = document.createElement('div');
 //size of bubble and shape
-bubble.style.cssText =
-border-radius: 14px;
-font-size: 0.8rem;
-padding: 8px 12px;
-max-width: 85%;
-word-break: break-word;
-line-height: 1.50;
-${role === 'user'
+bubble.style.cssText = `
+  border-radius: 14px;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  max-width: 85%;
+  word-break: break-word;
+  line-height: 1.50;
+  ${role === 'user'
+
   //color
-  ?'background:var(--primary-clr); color:white;align-self:flex-end;margin-left:auto;border-bottom-right-radius:4px'
-  : 'background: #f0f0f4; color:#2f3443; align-self:flex-start;border-bottom-left-radius:4px;'};
+  ? 'background:var(--primary-clr); color:white;align-self:flex-end;margin-left:auto;border-bottom-right-radius:4px;'
+  : 'background: #f0f0f4; color:#2f3443; align-self:flex-start;border-bottom-left-radius:4px;'}
+  `;
   bubble.textContent = text;
   messagesEl.appendChild(bubble);
-  messagesEl.scrollTop = messagesEl.scrollHeight
+  messagesEl.scrollTop = messagesEl.scrollHeight;
   return bubble;
 }
 //not done yet tbd 
+//cont
+
+function startLoadingBubble(){
+  const messagesEl = document.getElementById('chat-messages');
+  if(!messagesEL) return null;
+
+  const bubble = document.createElement('div');
+  bubble.style.cssText= `
+  padding: 8px 14px;
+  font-size: 1 rem;
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+  max-width: 65px;
+  background: #f0f0f4;
+  color: #885;
+  align-self: flex-start;
+  letter-spacing: 2px;
+  `;
+  bubble.textContent ='...';
+
+//animations of ...
+let frame = 0; 
+const dots =['.', '..', '...'];
+const timer = setInterval(()=>{
+  bubble.textContent= dots[frame %3 ];
+  frame++;
+  }, 400);
+  bubble._stopAnimation = () => clear Interval(timer);
+messagesEl.appendChild(bubble);
+messagesEl.scrollTop = messagesEl.scrollHeight;
+return bubble;
+}
 
