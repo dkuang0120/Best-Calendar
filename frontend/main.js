@@ -618,37 +618,42 @@ if (document.readyState === 'loading') {
 setInterval(updateCurrentTimeLine, 60000);
 
 // AI Integration
-const sendButton = document.getElementById("send-chat");
-const chatInput = document.getElementById("chat-input");
-const chatOutput = document.getElementById("chat-output");
+// history of the chat for multiple chats 
+const chatHistory =[];
+function inirChat(){
+  const messagesEl = document.getElementById('chat-messages');
+  const chatInput = document.getElementById('chat-input');
+  const sendButton = document.getElementById('send-chat');
+  if(!messagesEl|| !chatInput || !sendButton) return;
 
-sendButton.addEventListener("click", sendMessage);
-
-async function sendMessage() {
-  const message = chatInput.value.trim();
-
-  if (!message) {
-    chatOutput.textContent = "Please enter a message.";
-    return;
-  }
-
-  chatOutput.textContent = "Thinking...";
-
-  try {
-    const res = await fetch("http://127.0.0.1:8000/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ message })
-    });
-
-    const data = await res.json();
-    console.log("server response:", data);
-
-    chatOutput.textContent = data.reply || "No response returned.";
-  } catch (err) {
-    console.error("error:", err);
-    chatOutput.textContent = "Something went wrong.";
-  }
+  //adding text box font 
+  appendChatBubble('assistant', "Hi there I am your calender AI. Ask me questions like \"What do I have today\" or \"Add a busy block on Monday 2pm to 5pm\".");
+  sendButton.addEventListener('click', sendChatMessage);
+  chatInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') sendChatMessage();
+  });
 }
+function appendChatBubble(role,text){
+  const messagesEl = document.getElementById('chat-messages');
+  if(!messagesEl)
+    return null;
+const bubble = document.createElement('div');
+//size of bubble and shape
+bubble.style.cssText =
+border-radius: 14px;
+font-size: 0.8rem;
+padding: 8px 12px;
+max-width: 85%;
+word-break: break-word;
+line-height: 1.50;
+${role === 'user'
+  //color
+  ?'background:var(--primary-clr); color:white;align-self:flex-end;margin-left:auto;border-bottom-right-radius:4px'
+  : 'background: #f0f0f4; color:#2f3443; align-self:flex-start;border-bottom-left-radius:4px;'};
+  bubble.textContent = text;
+  messagesEl.appendChild(bubble);
+  messagesEl.scrollTop = messagesEl.scrollHeight
+  return bubble;
+}
+//not done yet tbd 
+
