@@ -57,7 +57,28 @@ app.post("/chat", async (req, res) => {
       }),
     });
 
+      const data = await response.json();
 
-app.listen(PORT, () => {
+      let reply = "No response from OpenAI";
+      if (data.output_text) {
+        reply = data.output_text;
+      }
+      else if (data.output && Array.isArray(data.output)) {
+        const texts = data.output.flatMap (o => o.content || [])
+        .filter(c => c.type === "output_text")
+        .map(c => c.text);
+        if (texts.length)
+          reply = texts.join("\n");
+      }
+
+      res.json({ reply });
+
+  } catch (error) {
+    console.error("Error communicating with OpenAI API:", error);
+    res.status(500).json({ error: "Error communicating with OpenAI API" });
+  }
+});
+
+app.listen(process.env.PORT, () => {
   console.log(`Server running at http://127.0.0.1:${PORT}`);
 });
