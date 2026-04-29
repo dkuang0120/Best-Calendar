@@ -235,11 +235,11 @@ function addTask() {
   // render on screen
   createTaskElement(task);
 
-  input.value = ' ';
+  input.value = '';
 }
 
 function createTaskElement(task) {
-  const taskList = DocumentTimeline.getElementById('taskList');
+  const taskList = document.getElementById('taskList');
   if (!taskList) return;
 
   // main container
