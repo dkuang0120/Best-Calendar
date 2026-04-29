@@ -620,7 +620,7 @@ setInterval(updateCurrentTimeLine, 60000);
 // AI Integration
 // history of the chat for multiple chats 
 const chatHistory =[];
-function inirChat(){
+function initChat(){
   const messagesEl = document.getElementById('chat-messages');
   const chatInput = document.getElementById('chat-input');
   const sendButton = document.getElementById('send-chat');
@@ -690,4 +690,44 @@ messagesEl.appendChild(bubble);
 messagesEl.scrollTop = messagesEl.scrollHeight;
 return bubble;
 }
-
+// working on async functions
+async function sendChatMessage(){
+  const chatInput = document.getElementById('chat-input');
+  if(!chatInput) return;
+  const userText = chatInput.value.trim();
+  if(!userText) return;
+  chatInput.valie = '';
+  appendChatBubble('user', userText);
+  // adding to history collection
+  chatHistory.push({role: 'user', content: userText});
+  const loadingBubble= startLoadingBubble();
+  // live data
+  const messagesWithContext = chatHistory.map((msg, i) =>{
+    return{
+      role: 'user',
+      content: `${msg.content}\n\n[Current calandar events: \n${JSON.stringify(getEvents(),null,2)}]`
+    };
+    }
+   return msg;
+  }):
+  // checks local host (server)
+try{
+  const response = await fetch ("https://localhost:3000/chat",{
+    method: "POST",
+    headers: {
+    "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      message: userText,
+      events: getEvents()
+    })
+  });
+  if(loadingBubble){
+    loadingBubble._stopAnimation();
+    loadingBubble.remove();
+  }
+  if(!response.ok){
+    const err = await response.json().catch(()=> ({}));
+    throw new Error(err.error?.message || `HTTP ${response.status}`);
+  }
+  const data = await response.JSON();
