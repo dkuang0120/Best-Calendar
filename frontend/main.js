@@ -203,6 +203,15 @@ function renderEvents() {
 
 
 // ===== SIMPLE TODO FUNCTION =====
+// get tasks from localStorage (or empty array if none)
+function getTasks() {
+  return JSON.parse(localStorage.getItem('tasks') || '[]');
+}
+// save tasks to localStorage
+function saveTasks(tasks) {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
 function addTask() {
   const input = document.getElementById('taskInput');
   const taskList = document.getElementById('taskList');
