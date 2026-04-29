@@ -14,8 +14,14 @@ if(!OPENAI_API_KEY) {console.error("OPENAI_API_KEY is not set in environment var
   process.exit(1);
 }
 
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
+
 app.post("/chat", async (req, res) => {
-  const { messages } = req.body;
+  const { message, events = []} = req.body;
   
   try {
     const response = await fetch("https://api.openai.com/v1/responses", {
@@ -79,6 +85,6 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server running at http://127.0.0.1:${PORT}`);
 });

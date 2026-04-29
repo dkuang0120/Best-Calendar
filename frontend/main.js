@@ -662,7 +662,7 @@ bubble.style.cssText = `
 
 function startLoadingBubble(){
   const messagesEl = document.getElementById('chat-messages');
-  if(!messagesEL) return null;
+  if(!messagesEl) return null;
 
   const bubble = document.createElement('div');
   bubble.style.cssText= `
@@ -685,7 +685,7 @@ const timer = setInterval(()=>{
   bubble.textContent= dots[frame %3 ];
   frame++;
   }, 400);
-  bubble._stopAnimation = () => clear Interval(timer);
+  bubble._stopAnimation = () => clearInterval(timer);
 messagesEl.appendChild(bubble);
 messagesEl.scrollTop = messagesEl.scrollHeight;
 return bubble;
@@ -696,23 +696,24 @@ async function sendChatMessage(){
   if(!chatInput) return;
   const userText = chatInput.value.trim();
   if(!userText) return;
-  chatInput.valie = '';
+  chatInput.value = '';
   appendChatBubble('user', userText);
   // adding to history collection
   chatHistory.push({role: 'user', content: userText});
   const loadingBubble= startLoadingBubble();
   // live data
-  const messagesWithContext = chatHistory.map((msg, i) =>{
-    return{
+  const messagesWithContext = chatHistory.map((msg, i) => {
+    if (i === chatHistory.length - 1 && msg.role === 'user') {
+    return {
       role: 'user',
       content: `${msg.content}\n\n[Current calandar events: \n${JSON.stringify(getEvents(),null,2)}]`
-    };
+      };
     }
-   return msg;
-  }):
+    return msg;
+  });
   // checks local host (server)
 try{
-  const response = await fetch ("https://localhost:3000/chat",{
+  const response = await fetch ("http://127.0.0.1:3000/chat",{
     method: "POST",
     headers: {
     "Content-Type": "application/json",
@@ -727,7 +728,60 @@ try{
     loadingBubble.remove();
   }
   if(!response.ok){
-    const err = await response.json().catch(()=> ({}));
-    throw new Error(err.error?.message || `HTTP ${response.status}`);
+    const error = await response.json().catch(()=> ({}));
+    throw new Error(error.error?.message || `HTTP ${response.status}`);
   }
-  const data = await response.JSON();
+  const data = await response.json();
+
+  let replyText =
+  typeof data.reply === 'string' ? data.reply :
+  typeof data.message === 'string' ? data.message :
+  typeof data.content === 'string' ? data.content :
+  typeof data.content?.[0]?.text === 'string' ? data.content[0].text :
+  'No response from OpenAI';
+
+  // parse JSON from AI for start and end times
+try {
+  const parsed = JSON.parse(replyText.trim());
+  if (parsed.action === 'add') {
+    const startTime = parsed.startTime || parsed.time || '09:00';
+    const endTime = (parsed.endTime && parsed.endTime !== parsed.startTime)
+    ? parsed.endTime
+    : minutesToTime((timeToMinutes(startTime) || 540) + 60);
+    const events =  getEvents();
+    replyText = `Added "${parsed.title}" to your calendar on ${parsed.date} from ${startTime} to ${endTime}.`;
+
+    events.push({
+      id: Date.now(),
+      title: parsed.title,
+      date: parsed.date,
+      startTime: startTime,
+      endTime: endTime
+    });
+    saveEvents(events);
+    renderEvents();
+    renderWeekView();
+  } else if (parsed.action === 'delete') { 
+    const events = getEvents().filter (e => e.title !== parsed.title);
+    saveEvents(events);
+    renderEvents();
+    renderWeekView();
+    replyText = `Removed "${parsed.title}" from your calendar.`;
+  } 
+}
+catch (_) {
+  // normal text response, do nothing
+}
+
+chatHistory.push({ role: 'assistant', content: replyText }); 
+appendChatBubble('assistant', replyText);
+  } catch (error) {
+    if (loadingBubble) {
+      loadingBubble._stopAnimation();
+      loadingBubble.remove();
+    }
+    appendChatBubble('assistant', 'Error communicating with OpenAI API');
+  }
+
+}
+document.addEventListener('DOMContentLoaded', initChat);
