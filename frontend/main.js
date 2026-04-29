@@ -618,6 +618,7 @@ function initializeApp() {
   renderCalendar();
   renderEvents();
   renderWeekView();
+  loadTasks(); //load saved tasks on startup
   updateCurrentTimeLine();
   if (weekBodyWrapperEl) {
     weekBodyWrapperEl.addEventListener('scroll', () => {
