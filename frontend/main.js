@@ -238,7 +238,63 @@ function addTask() {
   input.value = ' ';
 }
 
+function createTaskElement(task) {
+  const taskList = DocumentTimeline.getElementById('taskList');
+  if (!taskList) return;
 
+  // main container
+  const taskItem = document.createElement('div');
+  taskItem.style.display = 'flex';
+  taskItem.style.justifyContent = 'space-between';
+
+  // left side (checkbox + text)
+  const taskLeft = document.createElement('div');
+  taskLeft.style.display = 'flex';
+  taskLeft.style.gap = '10px';
+
+  // checkbox
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = task.completed;
+
+  // task text
+  const taskLabel = document.createElement('span');
+  taskLabel.textContent = task.text;
+
+  // apply style if checked
+  function updateStyle() {
+    taskLabel.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
+  }
+  updateStyle();
+
+  // when checkbox changes the storage updates
+  checkbox.addEventListener('change', () => {
+    const tasks = getTasks().map(t =>
+      t.id === task.id ? { ...t, completed: checkbox.checked } : t
+    );
+    saveTasks(tasks);
+    updateStyle();
+  });
+
+  // delete button
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = 'x';
+
+  // remove the task from storage + UI
+  deleteBtn.addEventListener('click', () => {
+    const tasks = getTasks().filter(t => t.id !== task.id);
+    saveTasks(tasks);
+    taskItem.remove();
+  });
+
+  // build structure
+  taskLeft.appendChild(checkbox);
+  taskLeft.appendChild(taskLabel);
+  taskItem.appendChild(taskLeft);
+  taskItem.appendChild(deleteBtn);
+
+  taskList.appendChild(taskItem);
+}
 
 const taskInputEl = document.getElementById('taskInput');
 
