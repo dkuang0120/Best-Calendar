@@ -273,7 +273,8 @@ function createTaskElement(task) {
       t.id === task.id ? { ...t, completed: checkbox.checked } : t
     );
     saveTasks(tasks);
-    updateStyle();
+    
+    taskLabel.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
   });
 
   // delete button
@@ -298,20 +299,17 @@ function createTaskElement(task) {
 
 // load saved tasks and rebuild UI on page refresh
 function loadTasks() {
-  const tasks = getTasks();
-  tasks.forEach(task => createTaskElement(task));
-}
+  const taskList = document.getElementById('taskList');
+  if (!taskList) return;
 
-const taskInputEl = document.getElementById('taskInput');
-
-if (taskInputEl) {
-  taskInputEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      addTask();
-    }
+  taskList.innerHTML = '';
+  getTasks().forEach(task => {
+    createTaskElement(task);
   });
 }
+
+
+
 
 // ===== WEEK VIEW =====
 
@@ -620,6 +618,18 @@ function initializeApp() {
   renderWeekView();
   loadTasks(); //load saved tasks on startup
   updateCurrentTimeLine();
+
+  const taskInputEl = document.getElementById('taskInput');
+
+  if (taskInputEl) {
+  taskInputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTask();
+    }
+  });
+}
+
   if (weekBodyWrapperEl) {
     weekBodyWrapperEl.addEventListener('scroll', () => {
       syncTimeColumnScroll();
@@ -686,7 +696,7 @@ function startLoadingBubble(){
   const bubble = document.createElement('div');
   bubble.style.cssText= `
   padding: 8px 14px;
-  font-size: 1 rem;
+  font-size: 1rem;
   border-radius: 14px;
   border-bottom-left-radius: 4px;
   max-width: 65px;
