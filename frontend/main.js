@@ -296,6 +296,12 @@ function createTaskElement(task) {
   taskList.appendChild(taskItem);
 }
 
+// load saved tasks and rebuild UI on page refresh
+function loadTasks() {
+  const tasks = getTasks();
+  tasks.forEach(task => createTaskElement(task));
+}
+
 const taskInputEl = document.getElementById('taskInput');
 
 if (taskInputEl) {
