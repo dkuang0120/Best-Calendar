@@ -639,3 +639,60 @@ body {
     gap: 15px;
     min-height: 0;
 }
+.hidden {
+    display: none;
+}
+
+.event-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.4);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+.event-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.event-modal-content input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.event-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-modal-buttons button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--primary-clr);
+    color: white;
+    cursor: pointer;
+}
+
+.event-modal-buttons button:hover {
+    background: var(--primary-clr-hover);
+}
+.event-modal.hidden {
+    display: none;
+}

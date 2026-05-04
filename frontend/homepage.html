@@ -36,6 +36,11 @@
   <div class="main-view">
     <div class="week-toolbar">
       <h2 class="week-title">This Week</h2>
+
+      <div class = "week-nav-buttons">
+        <button id="prev-week">←</button>
+        <button id="next-next">→</button>
+      </div>
     </div>
 
     <div class="week-view">
@@ -80,3 +85,22 @@
 <script type= "module" src="main.js"></script>
 </body>
 </html>
+
+<!-- added event modal -->
+ <div id="event-modal" class="event-modal hidden">
+  <div class = "event-modal-content">
+    <h3>Add Event</h3>
+    
+    <input id="modal-event-title" type="text" placeholder="Event title">
+    <input id="modal-start-time" type="time">
+    <input id="modal-end-time" type="time">
+
+    <div class="event-modal-buttons">
+      <button id="save-modal-event">Save</button>
+      <button id="cancel-modal-event">Cancel</button>
+    </div>
+
+  </div>
+ </div>
+
+ <script type="module" src="main.js"></script>
