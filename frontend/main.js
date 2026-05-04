@@ -308,9 +308,9 @@ function createTaskElement(task) {
     taskLabel.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
   });
 
-  // delete button
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'x';
+  // Edit button
+  const editBtn = document.createElement('button');
+  editBtn.textContent = '✎';
 
   // remove the task from storage + UI
   deleteBtn.addEventListener('click', () => {
@@ -323,7 +323,7 @@ function createTaskElement(task) {
   taskLeft.appendChild(checkbox);
   taskLeft.appendChild(taskLabel);
   taskItem.appendChild(taskLeft);
-  taskItem.appendChild(deleteBtn);
+  taskItem.appendChild(editBtn);
 
   taskList.appendChild(taskItem);
 }
@@ -585,41 +585,201 @@ function renderWeekEvents() {
     titleEl.className = 'week-event-title';
     titleEl.textContent = event.title;
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.type = 'button';
-    deleteBtn.textContent = '×';
-    deleteBtn.setAttribute('aria-label', 'Delete event');
-    deleteBtn.title = 'Delete event';
-    deleteBtn.style.position = 'absolute';
-    deleteBtn.style.top = '6px';
-    deleteBtn.style.right = '6px';
-    deleteBtn.style.width = '20px';
-    deleteBtn.style.height = '20px';
-    deleteBtn.style.border = 'none';
-    deleteBtn.style.borderRadius = '50%';
-    deleteBtn.style.background = 'rgba(0, 0, 0, 0.12)';
-    deleteBtn.style.cursor = 'pointer';
-    deleteBtn.style.lineHeight = '1';
-    deleteBtn.style.fontSize = '0.95rem';
-    deleteBtn.style.display = 'none';
-    deleteBtn.addEventListener('click', (e) => {
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.textContent = '✏️';
+    editBtn.setAttribute('aria-label', 'Edit event');
+    editBtn.title = 'Edit event';
+    editBtn.style.position = 'absolute';
+    editBtn.style.top = '6px';
+    editBtn.style.right = '6px';
+    editBtn.style.width = '20px';
+    editBtn.style.height = '20px';
+    editBtn.style.border = 'none';
+    editBtn.style.borderRadius = '50%';
+    editBtn.style.background = 'rgba(0, 0, 0, 0.12)';
+    editBtn.style.cursor = 'pointer';
+    editBtn.style.lineHeight = '1';
+    editBtn.style.fontSize = '0.95rem';
+    editBtn.style.display = 'none';
+    editBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      deleteEvent(event.id);
+      openEditModal(event);
     });
 
     eventEl.addEventListener('mouseenter', () => {
-      deleteBtn.style.display = 'block';
+      editBtn.style.display = 'block';
     });
 
     eventEl.addEventListener('mouseleave', () => {
-      deleteBtn.style.display = 'none';
+      editBtn.style.display = 'none';
     });
 
     eventEl.appendChild(titleEl);
-    eventEl.appendChild(deleteBtn);
+    eventEl.appendChild(editBtn);
     dayColumn.appendChild(eventEl);
   });
 }
+
+function openEditModal(event) {
+  // Remove any existing modal
+  document.getElementById('edit-event-modal')?.remove();
+
+  // ── Backdrop
+  const backdrop = document.createElement('div');
+  backdrop.id = 'edit-event-modal';
+  Object.assign(backdrop.style, {
+    position: 'fixed', inset: '0',
+    background: 'rgba(0,0,0,0.35)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    zIndex: '1000',
+  });
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) backdrop.remove();
+  });
+
+  // ── Modal card
+  const modal = document.createElement('div');
+  Object.assign(modal.style, {
+    background: '#fff',
+    borderRadius: '12px',
+    padding: '24px',
+    width: '320px',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '14px',
+    position: 'relative',
+  });
+
+  // ── Header
+  const header = document.createElement('h3');
+  header.textContent = 'Edit Event';
+  Object.assign(header.style, { margin: '0', fontSize: '1.1rem', fontWeight: '600' });
+
+  // ── Title field
+  const titleLabel = document.createElement('label');
+  titleLabel.textContent = 'Title';
+  Object.assign(titleLabel.style, { fontSize: '0.8rem', fontWeight: '500', color: '#555' });
+
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.value = event.title ?? '';
+  Object.assign(titleInput.style, {
+    width: '100%', padding: '8px 10px', borderRadius: '6px',
+    border: '1px solid #ddd', fontSize: '0.95rem', boxSizing: 'border-box',
+  });
+
+  // ── Time field (optional — remove if your event has no time)
+const startTimeLabel = document.createElement('label');
+startTimeLabel.textContent = 'Start time';
+Object.assign(startTimeLabel.style, { fontSize: '0.8rem', fontWeight: '500', color: '#555' });
+
+const startTimeInput = document.createElement('input');
+startTimeInput.type = 'time';
+startTimeInput.value = event.startTime ?? event.time ?? '';
+Object.assign(startTimeInput.style, {
+  width: '100%', padding: '8px 10px', borderRadius: '6px',
+  border: '1px solid #ddd', fontSize: '0.95rem', boxSizing: 'border-box',
+});
+
+const endTimeLabel = document.createElement('label');
+endTimeLabel.textContent = 'End time';
+Object.assign(endTimeLabel.style, { fontSize: '0.8rem', fontWeight: '500', color: '#555' });
+
+const endTimeInput = document.createElement('input');
+endTimeInput.type = 'time';
+endTimeInput.value = event.endTime ?? '';
+Object.assign(endTimeInput.style, {
+  width: '100%', padding: '8px 10px', borderRadius: '6px',
+  border: '1px solid #ddd', fontSize: '0.95rem', boxSizing: 'border-box',
+});
+
+  // ── Action row
+  const actions = document.createElement('div');
+  Object.assign(actions.style, {
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px',
+  });
+
+  // Delete button (inside modal)
+  const deleteBtn = document.createElement('button');
+  deleteBtn.type = 'button';
+  deleteBtn.textContent = 'Delete';
+  Object.assign(deleteBtn.style, {
+    padding: '7px 14px', borderRadius: '6px', border: '1px solid #f44',
+    background: 'transparent', color: '#f44', cursor: 'pointer', fontSize: '0.875rem',
+  });
+  deleteBtn.addEventListener('click', () => {
+    if (confirm(`Delete "${event.title}"?`)) {
+      deleteEvent(event.id);
+      backdrop.remove();
+    }
+  });
+
+  // Right-side: Cancel + Save
+  const rightBtns = document.createElement('div');
+  Object.assign(rightBtns.style, { display: 'flex', gap: '8px' });
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.textContent = 'Cancel';
+  Object.assign(cancelBtn.style, {
+    padding: '7px 14px', borderRadius: '6px', border: '1px solid #ddd',
+    background: 'transparent', cursor: 'pointer', fontSize: '0.875rem',
+  });
+  cancelBtn.addEventListener('click', () => backdrop.remove());
+
+  const saveBtn = document.createElement('button');
+  saveBtn.type = 'button';
+  saveBtn.textContent = 'Save';
+  Object.assign(saveBtn.style, {
+    padding: '7px 14px', borderRadius: '6px', border: 'none',
+    background: '#4f46e5', color: '#fff', cursor: 'pointer', fontSize: '0.875rem',
+  });
+saveBtn.addEventListener('click', () => {
+  const newStart = startTimeInput.value;
+  const newEnd = endTimeInput.value;
+  if (newEnd && newStart && timeToMinutes(newEnd) <= timeToMinutes(newStart)) {
+    alert('End time must be later than start time.');
+    return;
+  }
+  updateEvent(event.id, {
+    title: titleInput.value.trim(),
+    startTime: newStart,
+    endTime: newEnd,
+    time: newStart,
+  });
+  backdrop.remove();
+});
+
+  rightBtns.appendChild(cancelBtn);
+  rightBtns.appendChild(saveBtn);
+  actions.appendChild(deleteBtn);
+  actions.appendChild(rightBtns);
+
+  modal.appendChild(titleLabel);
+  modal.appendChild(titleInput);
+  modal.appendChild(startTimeLabel);
+  modal.appendChild(startTimeInput);
+  modal.appendChild(endTimeLabel);
+  modal.appendChild(endTimeInput);
+  modal.appendChild(actions);
+  modal.appendChild(header);
+  backdrop.appendChild(modal);
+  document.body.appendChild(backdrop);
+
+  titleInput.focus();
+}
+
+
+function updateEvent(id, changes) {
+  const updated = getEvents().map(e => e.id === id ? { ...e, ...changes } : e);
+  saveEvents(updated);
+  renderEvents();
+  renderWeekView();
+}
+
+
 
 function updateCurrentTimeLine() {
   const lineEl = document.getElementById('current-time-line');
