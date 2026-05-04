@@ -21,6 +21,16 @@ const saveEventBtn      = document.getElementById('save-event');
 const eventTitleInput   = document.getElementById('event-title');
 const eventTimeInput    = document.getElementById('event-time');
 const selectedDateLabel = document.getElementById('selected-date-label');
+const prevWeekBtn = document.getElementById('prev-week');
+const nextWeekBtn = document.getElementById('next-week');
+const eventModal = document.getElementById('event-modal');
+const modalEventTitle = document.getElementById('modal-event-title');
+const modalStartTime = document.getElementById('modal-start-time');
+const modalEndTime = document.getElementById('modal-end-time');
+const saveModalEventBtn = document.getElementById('save-modal-event');
+const cancelModalEventBtn = document.getElementById('cancel-modal-event');
+
+let selectedEventDate = null;
 
 function isSameDate(a, b) {
   return a.getDate() === b.getDate() &&
@@ -104,6 +114,27 @@ if (nextArrow) {
     renderEvents();
     renderWeekView();
   });
+}
+
+function changeWeek(days) {
+  const currentDate = new Date(currentYear, currentMonth, selectedDay);
+  currentDate.setDate(currentDate.getDate() + days);
+
+  currentYear = currentDate.getFullYear();
+  currentMonth = currentDate.getMonth();
+  selectedDay = currentDate.getDate();
+
+  renderCalendar();
+  renderEvents();
+  renderWeekView();
+}
+
+if (prevWeekBtn) {
+  prevWeekBtn.addEventListener('click', () => changeWeek(-7));
+}
+
+if (nextWeekBtn) {
+  nextWeekBtn.addEventListener('click', () => changeWeek(7));
 }
 
 // ── Day selection ─────────────────────────────────────────────────────────────
@@ -371,41 +402,61 @@ function formatEventRange(startTime, endTime) {
 }
 
 function createWeekEventForDate(dateString) {
-  const title = window.prompt('Enter class title:');
-  if (!title || !title.trim()) return;
+  selectedEventDate = dateString;
 
-  const startTimeInput = window.prompt('Enter start time (HH:MM, 24-hour format):', '09:00');
-  if (!startTimeInput) return;
+  modalEventTitle.value = '';
+  modalStartTime.value = '09:00';
+  modalEndTime.value = '10:00';
 
-  const endTimeInput = window.prompt('Enter end time (HH:MM, 24-hour format):', '10:00');
-  if (!endTimeInput) return;
+  eventModal.classList.remove('hidden');
+} 
 
-  const startMinutes = timeToMinutes(startTimeInput);
-  const endMinutes = timeToMinutes(endTimeInput);
+if (saveModalEventBtn) {
+  saveModalEventBtn.addEventListener('click', () => {
+    const title = modalEventTitle.value.trim();
+    const startTime = modalStartTime.value;
+    const endTime = modalEndTime.value;
 
-  if (startMinutes === null || endMinutes === null || Number.isNaN(startMinutes) || Number.isNaN(endMinutes)) {
-    window.alert('Please enter valid times in HH:MM format.');
-    return;
-  }
+    if (!title) {
+      alert('Please enter an event title.');
+      return;
+    }
 
-  if (endMinutes <= startMinutes) {
-    window.alert('End time must be later than start time.');
-    return;
-  }
+    if (!startTime || !endTime) {
+      alert('Please enter start and end times.');
+      return;
+    }
 
-  const events = getEvents();
-  events.push({
-    id: Date.now(),
-    title: title.trim(),
-    date: dateString,
-    time: startTimeInput,
-    startTime: startTimeInput,
-    endTime: endTimeInput
+    if (timeToMinutes(endTime) <= timeToMinutes(startTime)) {
+      alert('End time must be later than start time.');
+      return;
+    }
+
+    const events = getEvents();
+
+    events.push({
+      id: Date.now(),
+      title,
+      date: selectedEventDate,
+      time: startTime,
+      startTime,
+      endTime
+    });
+
+    saveEvents(events);
+    renderEvents();
+    renderWeekView();
+
+    eventModal.classList.add('hidden');
   });
-  saveEvents(events);
-  renderEvents();
-  renderWeekView();
 }
+
+if (cancelModalEventBtn) {
+  cancelModalEventBtn.addEventListener('click', () => {
+    eventModal.classList.add('hidden');
+  });
+}
+
 
 function renderTimeColumn() {
   if (!timeColumnEl) return;
