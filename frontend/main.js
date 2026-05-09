@@ -328,7 +328,6 @@ function createTaskElement(task) {
   taskLeft.appendChild(taskLabel);
   taskItem.appendChild(taskLeft);
   taskItem.appendChild(deleteBtn);
-
   taskList.appendChild(taskItem);
 }
 
