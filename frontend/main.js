@@ -312,6 +312,10 @@ function createTaskElement(task) {
   const editBtn = document.createElement('button');
   editBtn.textContent = '✎';
 
+  // Delete button
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = 'x';
+
   // remove the task from storage + UI
   deleteBtn.addEventListener('click', () => {
     const tasks = getTasks().filter(t => t.id !== task.id);
@@ -323,7 +327,7 @@ function createTaskElement(task) {
   taskLeft.appendChild(checkbox);
   taskLeft.appendChild(taskLabel);
   taskItem.appendChild(taskLeft);
-  taskItem.appendChild(editBtn);
+  taskItem.appendChild(deleteBtn);
 
   taskList.appendChild(taskItem);
 }
