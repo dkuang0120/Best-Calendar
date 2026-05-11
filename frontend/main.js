@@ -1,3 +1,8 @@
+/**
+ * Best Calendar- Frontend Logic
+ * Handles redering the calendar UI and user interactions.
+ * Communicates with backend AI chat 
+ */
 console.log("loaded");
 
 const months = [
