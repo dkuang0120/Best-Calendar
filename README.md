@@ -10,6 +10,9 @@ Best-Calendar is a simple web application that provides users with a clean calen
 - Basic server to serve the calendar application and potential API endpoints.
 - Static frontend files providing the calendar UI.
 
+## Screenshot
+ ![Calendar UI Screenshot] (frontend/screenshot.png)
+
 ## Getting Started
 
 ### Prerequisites
